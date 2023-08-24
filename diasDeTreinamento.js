@@ -1,7 +1,7 @@
-const nome = "Seu Nome";
+const nome = "Rebeca";
 
 function getEventoAleatorio() {
-  const numeroAleatorio = Math.floor(Math.random() * 3); // Gera um número entre 0 e 2
+  const numeroAleatorio = Math.floor(Math.random() * 3);
 
   if (numeroAleatorio === 0) {
     return "Maratona";
