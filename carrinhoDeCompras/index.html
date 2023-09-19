@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Varejão dos Importados</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+    <style>
+        * { padding: 0; margin: 0; }
+        
+        .cabecalho {
+            background-color: blue;
+            text-align: center;
+            padding: 30px;
+        }
+        .titulo { color: cornsilk; font-family: Arial; }
+        
+        .conteudo {
+            min-height: 100vh;
+            padding: 20px 80px;
+            background-color: white;
+        }
+        .conteudo__cabecalho { color: black; font: 800 30px Arial; margin-bottom: 10px;}
+        
+       
+        .produto__container {
+            display: grid;
+            grid-template-columns: auto auto auto auto;
+            justify-content: space-between;
+            row-gap: 30px;
+            column-gap: 30px;
+            padding: 0 20px;
+        }
+        .produto {
+            background-color: #efefef;
+            width: 250px;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 18px;
+            text-align: center;
+        }
+        .produto__img { width: 180px; }
+        .produto__nome { font: 500 19px Arial }
+        .produto__preco { text-align: left; margin: 10px; font: 700 20px Arial; }
+
+        .carrinho {
+            margin-top: 30px;
+            border-top: 2px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .produto-no-carrinho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .botao-remover {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        .botao-remover:hover {
+            background-color: #cc0000;
+        }
+        
+        /* RODAPÉ */
+        .rodape {
+            background-color: black;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .botao-adicionar {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        .botao-adicionar:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        var loja = {
+            nomeApp: "Varejão dos Importados",
+            autor: "Rebeca Rodrigues de Primo"
+        };
+        
+        class ProdutoFactory {
+            constructor(nome, preco, img) {
+                this.nome = nome;
+                this.preco = preco;
+                this.img = img;
+            }
+        }
+
+        var produto1 = new ProdutoFactory("Smartphone XYZ", "999,99", "img/aplicativo-movel.png");
+        var produto2 = new ProdutoFactory("Laptop ABC", "1.499,00", "img/tela-do-laptop.png");
+        var produto3 = new ProdutoFactory("Fones de Ouvido Bluetooth", "79,90", "img/fone-de-ouvido.png");
+        var produto4 = new ProdutoFactory("Smart TV 4K", "2.199,00", "img/smart-tv.png");
+        var produto5 = new ProdutoFactory("Câmera DSLR", "1.799,00", "img/camera.png");
+        var produto6 = new ProdutoFactory("Tablet ABC", "599,99", "img/tablet-grafico.png");
+        var produto7 = new ProdutoFactory("Mouse sem fio", "69,90", "img/rato.png");
+        var produto8 = new ProdutoFactory("Teclado mecânico", "135,00", "img/teclado.png");
+
+        // retorna o cabeçalho
+        function Header(props) {
+            return (
+                <header className="cabecalho">
+                    <h1 className="titulo">{props.nomeApp}</h1>    
+                </header>
+            );
+        }
+
+        // retorna o elemento que representa o produto
+        function Produto(props) {
+            return (
+                <div className="produto">
+                    <img className="produto__img" src={props.produto.img} alt="produto"/>
+                    <p className="produto__nome">{props.produto.nome}</p>
+                    <p className="produto__preco">R$ {props.produto.preco}</p>
+                    <button className="botao-adicionar" onClick={() => props.adicionarAoCarrinho(props.produto)}>Adicionar ao Carrinho</button>  
+                </div>
+            );
+        }
+
+        // retorna a principal área de conteúdo
+        function Content(props) {
+            var produtos = [];
+            for (let x=0; x<props.produtos.length; x++) {
+                produtos.push(<Produto produto={props.produtos[x]} adicionarAoCarrinho={props.adicionarAoCarrinho} />);
+            }
+            return (
+                <main className="conteudo">
+                    <h2 className="conteudo__cabecalho">Eletrônicos</h2>
+                    <section className="produto__container">
+                        {produtos}
+                    </section>    
+
+                    <section className="carrinho">
+                        <h2>Carrinho de Compras</h2>
+                        {props.carrinho.map((produto) => (
+                            <div key={produto.nome} className="produto-no-carrinho">
+                                <p>{produto.nome}</p>
+                                <p>R$ {produto.preco}</p>
+                                <button className="botao-remover" onClick={() => props.removerDoCarrinho(produto)}>Remover</button>
+                            </div>
+                        ))}
+                    </section>
+                </main>
+            );
+        }
+
+        // retorna o rodapé
+        function Footer(props) {
+            return (
+                <footer className="rodape">
+                    <p>Desenvolvido por {props.autor}</p>    
+                </footer>
+            );
+        }
+
+        // componente principal
+        function App(props) {
+            const [carrinho, setCarrinho] = React.useState([]);
+
+            // Função para adicionar um produto ao carrinho
+            function adicionarAoCarrinho(produto) {
+                setCarrinho([...carrinho, produto]);
+            }
+
+            // Função para remover um produto do carrinho
+            function removerDoCarrinho(produto) {
+                const novoCarrinho = carrinho.filter((item) => item !== produto);
+                setCarrinho(novoCarrinho);
+            }
+
+            return (
+                <div>
+                    <Header nomeApp={props.loja.nomeApp}/>
+                    <Content produtos={props.produtos} carrinho={carrinho} adicionarAoCarrinho={adicionarAoCarrinho} removerDoCarrinho={removerDoCarrinho} />
+                    <Footer autor={props.loja.autor} />
+                </div>
+            );
+        }
+
+        const element = <App loja={loja} produtos={[produto1, produto2, produto3, produto4, produto5, produto6, produto7, produto8]}/>;
+        ReactDOM.render(element, document.getElementById("root"));
+    </script>
+</body>
+
+</html>
